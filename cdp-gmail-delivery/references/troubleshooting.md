@@ -1,5 +1,15 @@
 # Troubleshooting
 
+## Runtime dependency missing (`Unable to load puppeteer-core`)
+
+Symptoms:
+- send script exits before connecting to Chrome
+
+Actions:
+1. Run `bash skills/cdp-gmail-delivery/scripts/install_runtime.sh`
+2. Confirm `skills/cdp-gmail-delivery/.runtime/pupp-mail/node_modules/puppeteer-core` exists
+3. Retry the send command
+
 ## CDP endpoint unreachable (`ECONNREFUSED 127.0.0.1:9222`)
 
 Symptoms:
