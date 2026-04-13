@@ -37,7 +37,7 @@ UI baseline for this workflow: Google Drive web UI in English (`New` -> `File up
 
 1. Restart the visible debug Chrome session:
    - Run `scripts/restart_debug_chrome.sh` from repo/workspace root
-2. If Gmail is not already authenticated in that visible Chrome window, ask the operator to sign in manually.
+2. If Gmail is not already authenticated in that visible Chrome window, ask the Human operator to sign in manually. So AI Agent will never know what is the login secrets(password / MFA)
 3. Send mail over CDP with `scripts/send_via_cdp.js`.
 4. Verify send in Sent folder by a unique subject.
 5. If Gmail blocks attachment for security reasons, switch immediately to Drive-link delivery (default fallback) using Drive UI path `New` -> `File upload`.
