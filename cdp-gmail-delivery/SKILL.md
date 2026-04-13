@@ -17,8 +17,8 @@ Default policy: for skill bundles or executable-looking archives, prefer Google 
 
 ## Environment Assumptions
 
-- Chrome debug launcher exists at:
-  - `/home/little7/.openclaw/workspace/scripts/restart_debug_chrome.sh`
+- Chrome debug launcher exists in your repo/workspace:
+  - `scripts/restart_debug_chrome.sh`
 - Chrome DevTools endpoint is `http://127.0.0.1:9222`
 - Node is available
 - `puppeteer-core` can be installed in `/tmp/pupp-mail`
@@ -26,7 +26,7 @@ Default policy: for skill bundles or executable-looking archives, prefer Google 
 ## Workflow
 
 1. Restart the visible debug Chrome session:
-   - Run `/home/little7/.openclaw/workspace/scripts/restart_debug_chrome.sh`
+   - Run `scripts/restart_debug_chrome.sh` from repo/workspace root
 2. Ask user to complete Gmail login in that visible window.
 3. Send mail over CDP with `scripts/send_via_cdp.js`.
 4. Verify send in Sent folder by a unique subject.
@@ -54,7 +54,7 @@ npm install puppeteer-core@24
 ## Send Command
 
 ```bash
-node /home/little7/.openclaw/workspace/skills/cdp-gmail-delivery/scripts/send_via_cdp.js \
+node skills/cdp-gmail-delivery/scripts/send_via_cdp.js \
   --to "recipient@example.com" \
   --file "/absolute/path/to/file.txt" \
   --body "Optional message"
