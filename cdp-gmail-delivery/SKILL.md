@@ -90,8 +90,11 @@ If recipient reports blocked attachment, do not claim delivered content. Immedia
 
 - Agent-browser skill used in the same recovery context:
   - `skills/agent-browser-clawdbot/SKILL.md`
-- Shell script source reference (repo context from your environment):
-  - `scripts/xrdp_chrome_debug_setup.sh` and `scripts/restart_debug_chrome.sh`
+- Browser runtime/bootstrap foundation:
+  - `https://github.com/joustonhuang/chrome_for_openclaw`
+  - Script references: `chrome_for_openclaw.sh`, `scripts/restart_debug_chrome.sh`
+- Historical script context:
+  - `scripts/xrdp_chrome_debug_setup.sh`
   - Git repo context: `https://github.com/joustonhuang/unifai`
 - Incident receipts:
   - `references/receipts.md`
