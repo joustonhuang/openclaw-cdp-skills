@@ -9,6 +9,8 @@ Use this workflow when a user asks to deliver a file by Gmail and normal chat de
 
 Default policy: for skill bundles or executable-looking archives, prefer Google Drive share links over direct attachments.
 
+UI baseline for this workflow: Google Drive web UI in English (`New` -> `File upload`).
+
 ## Required Inputs
 
 - Recipient email
@@ -37,7 +39,7 @@ Default policy: for skill bundles or executable-looking archives, prefer Google 
 2. Ask user to complete Gmail login in that visible window.
 3. Send mail over CDP with `scripts/send_via_cdp.js`.
 4. Verify send in Sent folder by a unique subject.
-5. If Gmail blocks attachment for security reasons, switch immediately to Drive-link delivery (default fallback).
+5. If Gmail blocks attachment for security reasons, switch immediately to Drive-link delivery (default fallback) using Drive UI path `New` -> `File upload`.
 
 ## Non-negotiable Validation
 
