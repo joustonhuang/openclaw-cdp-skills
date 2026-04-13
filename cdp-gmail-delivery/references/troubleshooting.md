@@ -1,0 +1,53 @@
+# Troubleshooting
+
+## CDP endpoint unreachable (`ECONNREFUSED 127.0.0.1:9222`)
+
+Symptoms:
+- send script fails before opening Gmail
+
+Actions:
+1. Run `scripts/restart_debug_chrome.sh`
+2. Confirm endpoint:
+   - `curl -fsS http://127.0.0.1:9222/json/version`
+3. Retry send command
+
+## Gmail still opens Sign-in page in automation
+
+Symptoms:
+- browser automation sees Google login page
+
+Actions:
+1. Use visible desktop Chrome session started by `restart_debug_chrome.sh`
+2. Ask user to log in manually there
+3. Re-run send script after login
+
+## Validation failed: duplicate attachment
+
+Symptoms:
+- error includes `attachmentOk:false` / occurrence > 1
+
+Actions:
+1. Discard existing draft in Gmail
+2. Re-open fresh compose
+3. Attach only once and retry
+
+## Attachment blocked after send
+
+Symptoms:
+- recipient receives “Blocked for security reasons”
+
+Actions:
+1. Do not claim successful content delivery
+2. Upload file to Google Drive
+3. Share link with recipient
+4. Optionally send link by Gmail text-only email
+
+## Send toast not shown but maybe sent
+
+Symptoms:
+- script times out waiting for "Message sent"
+
+Actions:
+1. Search Sent folder by unique subject
+2. If found in Sent, treat as sent
+3. If not found, retry from fresh compose

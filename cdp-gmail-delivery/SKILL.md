@@ -23,6 +23,13 @@ Default policy: for skill bundles or executable-looking archives, prefer Google 
 - Node is available
 - `puppeteer-core` can be installed in `/tmp/pupp-mail`
 
+## Preflight Checklist
+
+- Confirm target file exists and is readable
+- Confirm recipient email is explicit
+- Confirm CDP endpoint responds (`http://127.0.0.1:9222/json/version`)
+- Confirm user login state in visible debug Chrome session
+
 ## Workflow
 
 1. Restart the visible debug Chrome session:
@@ -30,7 +37,7 @@ Default policy: for skill bundles or executable-looking archives, prefer Google 
 2. Ask user to complete Gmail login in that visible window.
 3. Send mail over CDP with `scripts/send_via_cdp.js`.
 4. Verify send in Sent folder by a unique subject.
-5. If Gmail blocks attachment for security reasons, upload to Google Drive and send a share link instead (this is the default fallback).
+5. If Gmail blocks attachment for security reasons, switch immediately to Drive-link delivery (default fallback).
 
 ## Non-negotiable Validation
 
@@ -73,6 +80,12 @@ Report success only after these outputs and Sent verification succeed.
 
 If recipient reports blocked attachment, do not claim delivered content. Immediately switch to Drive link delivery and report the new share link.
 
+## When to read extra references
+
+- If send flow fails or behaves unexpectedly: read `references/troubleshooting.md`
+- If attachments are blocked: read `references/drive-fallback.md`
+- If you need incident evidence/context: read `references/receipts.md`
+
 ## References
 
 - Agent-browser skill used in the same recovery context:
@@ -82,3 +95,7 @@ If recipient reports blocked attachment, do not claim delivered content. Immedia
   - Git repo context: `https://github.com/joustonhuang/unifai`
 - Incident receipts:
   - `references/receipts.md`
+- Troubleshooting:
+  - `references/troubleshooting.md`
+- Drive fallback:
+  - `references/drive-fallback.md`
