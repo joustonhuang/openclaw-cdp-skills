@@ -90,8 +90,8 @@ If recipient reports blocked attachment, do not claim delivered content. Immedia
 
 ## References
 
-- Agent-browser skill used in the same recovery context:
-  - `skills/agent-browser-clawdbot/SKILL.md`
+- Runtime model:
+  - This workflow uses direct Chrome CDP automation (Puppeteer), not agent-browser.
 - Browser runtime/bootstrap foundation:
   - `https://github.com/joustonhuang/chrome_for_openclaw`
   - Script references: `chrome_for_openclaw.sh`, `scripts/restart_debug_chrome.sh`

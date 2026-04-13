@@ -12,7 +12,7 @@ This repo is the skill layer. Runtime/browser bootstrap lives in:
 ## Cross-references
 
 - Browser runtime/bootstrap: https://github.com/joustonhuang/chrome_for_openclaw
-- Agent browser skill (ClawHub): https://clawhub.ai/hsyhph/openclaw-agent-browser-clawdbot
+- CDP workflow skills source: https://github.com/joustonhuang/openclaw-cdp-skills
 
 ## Naming convention
 
