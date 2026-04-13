@@ -1,6 +1,7 @@
 ---
 name: cdp-gmail-delivery
-description: Send files reliably from an operator-controlled Chrome debug session using Gmail CDP automation with Google Drive share-link fallback. Use when direct channel file delivery fails and the user asks for email delivery. Workflow: restart debug Chrome with restart_debug_chrome.sh, let user sign in, connect over CDP (9222), validate To/Subject/attachment, send, verify in Sent, and if attachment is blocked switch to Google Drive share link as default delivery method.
+description: "Send files reliably from an operator-controlled Chrome debug session using Gmail CDP automation with Google Drive share-link fallback. Use when direct channel file delivery fails and the user asks for email delivery. Workflow: restart local debug Chrome, have the operator sign in if needed, connect to 127.0.0.1:9222, validate To/Subject/attachment, send, verify in Sent, and if attachment is blocked switch to Google Drive share link as the default delivery method."
+metadata: {"openclaw":{"requires":{"bins":["node","npm"]}}}
 ---
 
 # Gmail CDP Delivery
@@ -22,8 +23,8 @@ UI baseline for this workflow: Google Drive web UI in English (`New` -> `File up
 - Chrome debug launcher exists in your repo/workspace:
   - `scripts/restart_debug_chrome.sh`
 - Chrome DevTools endpoint is `http://127.0.0.1:9222`
-- Node is available
-- `puppeteer-core` can be installed in `/tmp/pupp-mail`
+- Node and npm are available
+- This skill's runtime dependency is installed once with the bundled installer into `skills/cdp-gmail-delivery/.runtime/pupp-mail`
 
 ## Preflight Checklist
 
@@ -36,7 +37,7 @@ UI baseline for this workflow: Google Drive web UI in English (`New` -> `File up
 
 1. Restart the visible debug Chrome session:
    - Run `scripts/restart_debug_chrome.sh` from repo/workspace root
-2. Ask user to complete Gmail login in that visible window.
+2. If Gmail is not already authenticated in that visible Chrome window, ask the operator to sign in manually.
 3. Send mail over CDP with `scripts/send_via_cdp.js`.
 4. Verify send in Sent folder by a unique subject.
 5. If Gmail blocks attachment for security reasons, switch immediately to Drive-link delivery (default fallback) using Drive UI path `New` -> `File upload`.
@@ -53,12 +54,18 @@ If any check fails, stop and repair draft fields before send.
 
 ## Install (one-time)
 
+From the workspace root, run:
+
 ```bash
-mkdir -p /tmp/pupp-mail
-cd /tmp/pupp-mail
-npm init -y
-npm install puppeteer-core@24
+bash skills/cdp-gmail-delivery/scripts/install_runtime.sh
 ```
+
+What it does:
+- Creates `skills/cdp-gmail-delivery/.runtime/pupp-mail`
+- Initializes a minimal npm runtime there
+- Installs pinned `puppeteer-core@24`
+
+This keeps the runtime local to the skill instead of using an ad hoc `/tmp` path.
 
 ## Send Command
 
@@ -76,9 +83,9 @@ The script prints:
 - `EMAIL_SENT_OK`
 - `SUBJECT=<unique-subject>`
 - `TO=<recipient>`
-- `FILE=<file-path>`
+- `FILE_NAME=<basename-only>`
 
-Report success only after these outputs and Sent verification succeed.
+Report success only after these outputs and Sent verification succeed. Do not expose absolute local filesystem paths in success messages.
 
 If recipient reports blocked attachment, do not claim delivered content. Immediately switch to Drive link delivery and report the new share link.
 

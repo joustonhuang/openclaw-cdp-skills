@@ -1,7 +1,27 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
-const puppeteer = require('/tmp/pupp-mail/node_modules/puppeteer-core');
+
+function loadPuppeteer() {
+  const candidates = [
+    process.env.CDP_GMAIL_DELIVERY_PUPPETEER,
+    path.join(__dirname, '..', '.runtime', 'pupp-mail', 'node_modules', 'puppeteer-core'),
+    path.join(process.cwd(), 'node_modules', 'puppeteer-core'),
+    'puppeteer-core',
+  ].filter(Boolean);
+
+  for (const candidate of candidates) {
+    try {
+      return require(candidate);
+    } catch {}
+  }
+
+  throw new Error(
+    'Unable to load puppeteer-core. Run: bash skills/cdp-gmail-delivery/scripts/install_runtime.sh'
+  );
+}
+
+const puppeteer = loadPuppeteer();
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -186,7 +206,7 @@ function getArg(name, fallback = '') {
   console.log('EMAIL_SENT_OK');
   console.log(`SUBJECT=${subject}`);
   console.log(`TO=${to}`);
-  console.log(`FILE=${file}`);
+  console.log(`FILE_NAME=${base}`);
 
   await browser.disconnect();
 })();
