@@ -16,11 +16,11 @@ Symptoms:
 - send script fails before opening Gmail
 
 Actions:
-1. Ask the human operator to help restart the visible debug Chrome session
-2. Run `scripts/restart_debug_chrome.sh`
+1. Run `scripts/restart_debug_chrome.sh`
 2. Confirm endpoint:
    - `curl -fsS http://127.0.0.1:9222/json/version`
-3. Retry send command
+3. If the endpoint is still unavailable, ask the human operator to help restore the visible debug Chrome session
+4. Retry send command
 
 ## Gmail still opens Sign-in page in automation
 

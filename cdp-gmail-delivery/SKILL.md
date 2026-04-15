@@ -33,11 +33,11 @@ Use this workflow when a user asks to send email by Gmail from the local machine
 ## Workflow
 
 1. Assume Chrome CDP is already available and try the send flow first.
-2. If the CDP endpoint is unavailable, ask the human operator to help restart the visible debug Chrome session:
-   - Run `scripts/restart_debug_chrome.sh` from repo/workspace root
-3. If Gmail is not already authenticated in that visible Chrome window, ask the operator to sign in manually.
-4. Send mail over CDP with `scripts/send_via_cdp.js`.
-5. Verify send in Sent folder by a unique subject.
+2. If the CDP endpoint is unavailable, run `scripts/restart_debug_chrome.sh` from repo/workspace root.
+3. If CDP is still unavailable after restart, ask the human operator to help restore the visible debug Chrome session.
+4. If Gmail is not already authenticated in that visible Chrome window, ask the operator to sign in manually.
+5. Send mail over CDP with `scripts/send_via_cdp.js`.
+6. Verify send in Sent folder by a unique subject.
 
 ## Non-negotiable Validation
 
