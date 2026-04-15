@@ -42,6 +42,34 @@ Actions:
 2. Re-open fresh compose
 3. Attach only once and retry
 
+## Attachment blocked by Gmail for security reasons
+
+Symptoms:
+- Gmail blocks the draft or send step
+- Gmail reports a security or harmful-content issue
+
+Common causes:
+- executable or script-like attachment types
+- blocked files inside archives
+- password-protected archives
+- documents with malicious macros
+
+Actions:
+1. Stop retrying the same blocked file
+2. Confirm whether the file type or archive contents match Gmail's blocked classes
+3. Ask the human operator for another delivery path or a safer export format
+
+## Attachment too large for Gmail
+
+Symptoms:
+- attachment cannot be added normally
+- Gmail moves large content out of the normal attachment path
+
+Actions:
+1. For personal Gmail, keep total attachment size at or under 25 MB
+2. For Workspace accounts, remember admin-defined limits may differ
+3. If the file is too large, stop and ask the human operator for another delivery path
+
 ## Send toast not shown but maybe sent
 
 Symptoms:

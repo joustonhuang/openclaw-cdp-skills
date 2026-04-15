@@ -26,9 +26,17 @@ Use this workflow when a user asks to send email by Gmail from the local machine
 ## Preflight Checklist
 
 - If attaching a file, confirm target file exists and is readable
+- If attaching files for a personal Gmail account, keep total size at or under 25 MB
+- Reject obviously blocked Gmail attachment classes before send:
+  - executable/script-heavy file types like `.exe`, `.dll`, `.js`, `.jar`, `.bat`, `.cmd`, `.msi`, `.iso`, and similar blocked extensions
+  - blocked files inside archives, including compressed forms or nested archives
+  - password-protected archives
+  - documents with malicious macros
 - Confirm recipient email is explicit
 - Confirm CDP endpoint responds (`http://127.0.0.1:9222/json/version`)
 - Confirm user login state in visible debug Chrome session
+
+If a requested attachment appears blocked or too large for Gmail, stop and ask the human operator for another delivery path. Do not keep retrying the same blocked upload.
 
 ## Workflow
 
@@ -48,6 +56,20 @@ Before clicking Send, validate all of the following in the live compose draft:
 - If attaching files, the compose draft shows all requested filenames before send
 
 If any check fails, stop and repair draft fields before send.
+
+## Gmail Attachment Constraints
+
+- Personal Gmail sending limit: 25 MB total attachment size
+- Google Workspace accounts may use admin-defined limits instead
+- Gmail blocks many risky attachment types, including executable and script-like formats such as:
+  - `.ade`, `.adp`, `.apk`, `.appx`, `.appxbundle`, `.bat`, `.cab`, `.chm`, `.cmd`, `.com`, `.cpl`, `.diagcab`, `.diagcfg`, `.diagpkg`, `.dll`, `.dmg`, `.ex`, `.ex_`, `.exe`, `.hta`, `.img`, `.ins`, `.iso`, `.isp`, `.jar`, `.jnlp`, `.js`, `.jse`, `.lib`, `.lnk`, `.mde`, `.mjs`, `.msc`, `.msi`, `.msix`, `.msixbundle`, `.msp`, `.mst`, `.nsh`, `.pif`, `.ps1`, `.scr`, `.sct`, `.shb`, `.sys`, `.vb`, `.vbe`, `.vbs`, `.vhd`, `.vxd`, `.wsc`, `.wsf`, `.wsh`, `.xll`
+- Gmail can also block:
+  - compressed forms of blocked files
+  - blocked files found inside archives like `.zip` or `.tgz`
+  - password-protected archives
+  - documents with malicious macros
+
+Use these constraints as preflight filters. If the file is likely to be blocked, do not claim it can be mailed successfully.
 
 ## Install (one-time)
 
