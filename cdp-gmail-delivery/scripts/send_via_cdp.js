@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 function loadPuppeteer() {
   const candidates = [
@@ -31,16 +32,27 @@ function getArg(name, fallback = '') {
   return fallback;
 }
 
+function getArgs(name) {
+  const values = [];
+  for (let i = 0; i < process.argv.length; i++) {
+    if (process.argv[i] === `--${name}` && process.argv[i + 1]) values.push(process.argv[i + 1]);
+  }
+  return values;
+}
+
 (async () => {
   const to = getArg('to');
-  const file = getArg('file');
-  const body = getArg('body', 'Hi, attached is the requested file.');
+  const files = getArgs('file');
+  const body = getArg('body', files.length ? 'Hi, attached are the requested files.' : 'Hi, this is the requested message.');
 
   if (!to) throw new Error('Missing --to');
-  if (!file) throw new Error('Missing --file');
-  if (!fs.existsSync(file)) throw new Error(`File not found: ${file}`);
+  for (const file of files) {
+    if (!fs.existsSync(file)) throw new Error(`File not found: ${file}`);
+  }
 
-  const base = path.basename(file);
+  const bases = files.map((file) => path.basename(file));
+  const textOnlyToken = crypto.randomBytes(4).toString('hex');
+  const base = bases.length === 1 ? bases[0] : bases.length > 1 ? `gmail-files-${bases.length}` : `gmail-message-${textOnlyToken}`;
   const stamp = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 12);
   const subject = `${base} ${stamp}`;
 
@@ -127,23 +139,23 @@ function getArg(name, fallback = '') {
 
   await page.keyboard.press('Enter'); // commit recipient chip
 
-  // attach file
-  const fileInputs = await page.$$('input[type="file"]');
-  if (!fileInputs.length) throw new Error('File input not found');
-  let attached = false;
-  for (const fi of fileInputs) {
-    try {
-      await fi.uploadFile(file);
-      attached = true;
-      break;
-    } catch {}
+  if (files.length) {
+    const fileInputs = await page.$$('input[type="file"]');
+    if (!fileInputs.length) throw new Error('File input not found');
+    let attached = false;
+    for (const fi of fileInputs) {
+      try {
+        await fi.uploadFile(...files);
+        attached = true;
+        break;
+      } catch {}
+    }
+    if (!attached) throw new Error('Attachment upload failed');
+    await sleep(3000);
   }
-  if (!attached) throw new Error('Attachment upload failed');
-
-  await sleep(3000);
 
   // strict validation before send
-  const checks = await page.evaluate((to, base) => {
+  const checks = await page.evaluate((to, requestedFiles) => {
     const vis = (el) => {
       if (!el) return false;
       const r = el.getBoundingClientRect();
@@ -163,11 +175,14 @@ function getArg(name, fallback = '') {
     const subjectValue = (subEl?.value || '').trim();
     const subjectOk = subjectValue.length > 0;
 
-    const occur = text.split(base).length - 1;
-    const attachmentOk = occur === 1;
+    const attachmentMatches = requestedFiles.map((name) => ({
+      name,
+      present: text.includes(name),
+    }));
+    const attachmentOk = attachmentMatches.every((item) => item.present);
 
-    return { toOk, subjectOk, attachmentOk, attachmentOccur: occur, subjectValue };
-  }, to, base);
+    return { toOk, subjectOk, attachmentOk, attachmentMatches, subjectValue };
+  }, to, bases);
 
   if (!checks.toOk || !checks.subjectOk || !checks.attachmentOk) {
     throw new Error(`Validation failed: ${JSON.stringify(checks)}`);
@@ -206,7 +221,7 @@ function getArg(name, fallback = '') {
   console.log('EMAIL_SENT_OK');
   console.log(`SUBJECT=${subject}`);
   console.log(`TO=${to}`);
-  console.log(`FILE_NAME=${base}`);
+  for (const base of bases) console.log(`FILE_NAME=${base}`);
 
   await browser.disconnect();
 })();

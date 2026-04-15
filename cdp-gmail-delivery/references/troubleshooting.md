@@ -19,7 +19,8 @@ Actions:
 1. Run `scripts/restart_debug_chrome.sh`
 2. Confirm endpoint:
    - `curl -fsS http://127.0.0.1:9222/json/version`
-3. Retry send command
+3. If the endpoint is still unavailable, ask the human operator to help restore the visible debug Chrome session
+4. Retry send command
 
 ## Gmail still opens Sign-in page in automation
 
@@ -40,17 +41,6 @@ Actions:
 1. Discard existing draft in Gmail
 2. Re-open fresh compose
 3. Attach only once and retry
-
-## Attachment blocked after send
-
-Symptoms:
-- recipient receives “Blocked for security reasons”
-
-Actions:
-1. Do not claim successful content delivery
-2. Upload file to Google Drive
-3. Share link with recipient
-4. Optionally send link by Gmail text-only email
 
 ## Send toast not shown but maybe sent
 
