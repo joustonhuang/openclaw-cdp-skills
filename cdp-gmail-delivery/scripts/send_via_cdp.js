@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 function loadPuppeteer() {
   const candidates = [
@@ -50,7 +51,8 @@ function getArgs(name) {
   }
 
   const bases = files.map((file) => path.basename(file));
-  const base = bases.length === 1 ? bases[0] : bases.length > 1 ? `gmail-files-${bases.length}` : 'gmail-message';
+  const textOnlyToken = crypto.randomBytes(4).toString('hex');
+  const base = bases.length === 1 ? bases[0] : bases.length > 1 ? `gmail-files-${bases.length}` : `gmail-message-${textOnlyToken}`;
   const stamp = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 12);
   const subject = `${base} ${stamp}`;
 
