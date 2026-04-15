@@ -11,7 +11,7 @@ Use this workflow when a user asks to send email by Gmail from the local machine
 ## Required Inputs
 
 - Recipient email
-- Optional file path
+- Optional file path or paths
 - Optional body text
 
 ## Environment Assumptions
@@ -45,7 +45,7 @@ Before clicking Send, validate all of the following in the live compose draft:
 
 - To field contains intended recipient
 - Subject is non-empty and unique
-- If attaching a file, attachment count is exactly 1 and filename matches requested file
+- If attaching files, the compose draft shows all requested filenames before send
 
 If any check fails, stop and repair draft fields before send.
 
@@ -81,6 +81,16 @@ node skills/cdp-gmail-delivery/scripts/send_via_cdp.js \
   --body "Optional message"
 ```
 
+With multiple attachments:
+
+```bash
+node skills/cdp-gmail-delivery/scripts/send_via_cdp.js \
+  --to "recipient@example.com" \
+  --file "/absolute/path/to/file-a.txt" \
+  --file "/absolute/path/to/file-b.txt" \
+  --body "Optional message"
+```
+
 ## Success Output
 
 The script prints:
@@ -88,7 +98,7 @@ The script prints:
 - `EMAIL_SENT_OK`
 - `SUBJECT=<unique-subject>`
 - `TO=<recipient>`
-- `FILE_NAME=<basename-only>` when a file is attached
+- `FILE_NAME=<basename-only>` for each attached file
 
 Report success only after these outputs and Sent verification succeed. Do not expose absolute local filesystem paths in success messages.
 
