@@ -48,7 +48,7 @@ Before clicking Send, validate all of the following in the live compose draft:
 
 - To field contains intended recipient
 - Subject is non-empty and unique
-- Attachment count is exactly 1 and filename matches requested file
+- Attachment count is exactly 1 and filename matches requested file (If your email text imply there is an attachment)
 
 If any check fails, stop and repair draft fields before send.
 
