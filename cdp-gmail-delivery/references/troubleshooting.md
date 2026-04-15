@@ -72,6 +72,21 @@ Actions:
 3. Tell the human operator this is a limitation of Gmail attachment sending for this skill
 4. Ask for another delivery path
 
+## Raw HTML email body requested
+
+Symptoms:
+- the user wants a true HTML email body or newsletter rendered inline in Gmail
+
+Reality:
+- this skill does not reliably support raw HTML body injection into Gmail compose
+- treat this as a limitation of the current Gmail CDP compose workflow
+
+Actions:
+1. Do not claim inline HTML email body support
+2. Tell the human operator this is a limitation of this skill
+3. Send plain-text summary/body plus `.html` attachment when acceptable
+4. If true inline HTML is required, route the request to a future Gmail API / MIME-based workflow
+
 ## Send toast not shown but maybe sent
 
 Symptoms:

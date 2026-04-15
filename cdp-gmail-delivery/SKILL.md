@@ -8,6 +8,8 @@ metadata: {"openclaw":{"requires":{"bins":["node","npm"]}}}
 
 Use this workflow when a user asks to send email by Gmail from the local machine, with or without an attachment.
 
+Current limitation: this skill supports plain-text Gmail body content plus attachments. It does not reliably support sending raw HTML as inline Gmail body content.
+
 ## Required Inputs
 
 - Recipient email
@@ -37,6 +39,8 @@ Use this workflow when a user asks to send email by Gmail from the local machine
 - Confirm user login state in visible debug Chrome session
 
 If a requested attachment appears blocked or too large for Gmail, stop and ask the human operator for another delivery path. Do not keep retrying the same blocked upload.
+
+If the user wants an HTML newsletter or raw HTML email body, treat inline HTML body delivery as unsupported for this skill under the current Gmail compose + CDP model. Use plain-text summary/body plus an `.html` attachment instead, or use a future Gmail API / MIME-based workflow.
 
 For detectable cases, `scripts/send_via_cdp.js` should fail before opening Gmail and print a limitation result instead of pretending the upload might work.
 
@@ -72,6 +76,18 @@ If any check fails, stop and repair draft fields before send.
   - documents with malicious macros
 
 Use these constraints as preflight filters. If the file is likely to be blocked, do not claim it can be mailed successfully.
+
+## HTML Email Limitation
+
+- Do not promise raw HTML body delivery through Gmail compose DOM automation
+- Gmail compose currently behaves like a plain-text/body-editor automation target for this skill, not a reliable raw HTML injection target
+- Treat HTML email as a limitation of this skill, not a temporary success path
+- Current supported workaround:
+  - put a plain-text summary or intro in the email body
+  - attach the full `.html` file
+- Future upgrade path for true inline HTML email:
+  - Gmail API
+  - raw MIME message assembly
 
 ## Install (one-time)
 
