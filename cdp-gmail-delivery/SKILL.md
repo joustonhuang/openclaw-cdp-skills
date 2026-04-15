@@ -38,6 +38,8 @@ Use this workflow when a user asks to send email by Gmail from the local machine
 
 If a requested attachment appears blocked or too large for Gmail, stop and ask the human operator for another delivery path. Do not keep retrying the same blocked upload.
 
+For detectable cases, `scripts/send_via_cdp.js` should fail before opening Gmail and print a limitation result instead of pretending the upload might work.
+
 ## Workflow
 
 1. Assume Chrome CDP is already available and try the send flow first.
@@ -123,6 +125,13 @@ The script prints:
 - `FILE_NAME=<basename-only>` for each attached file
 
 Report success only after these outputs and Sent verification succeed. Do not expose absolute local filesystem paths in success messages.
+
+When local preflight detects a Gmail attachment limitation, the script should print:
+
+- `LIMITATION_GMAIL_ATTACHMENT`
+- `REASON=<limitation-type>`
+- `DETAILS=<detected-context>` when available
+- `ACTION=...` telling the human operator this is a limitation of Gmail attachment sending for this skill
 
 ## When to read extra references
 

@@ -57,7 +57,8 @@ Common causes:
 Actions:
 1. Stop retrying the same blocked file
 2. Confirm whether the file type or archive contents match Gmail's blocked classes
-3. Ask the human operator for another delivery path or a safer export format
+3. Tell the human operator this is a limitation of Gmail attachment sending for this skill
+4. Ask for another delivery path or a safer export format
 
 ## Attachment too large for Gmail
 
@@ -68,7 +69,8 @@ Symptoms:
 Actions:
 1. For personal Gmail, keep total attachment size at or under 25 MB
 2. For Workspace accounts, remember admin-defined limits may differ
-3. If the file is too large, stop and ask the human operator for another delivery path
+3. Tell the human operator this is a limitation of Gmail attachment sending for this skill
+4. Ask for another delivery path
 
 ## Send toast not shown but maybe sent
 
