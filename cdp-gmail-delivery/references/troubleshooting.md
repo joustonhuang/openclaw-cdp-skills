@@ -16,7 +16,8 @@ Symptoms:
 - send script fails before opening Gmail
 
 Actions:
-1. Run `scripts/restart_debug_chrome.sh`
+1. Ask the human operator to help restart the visible debug Chrome session
+2. Run `scripts/restart_debug_chrome.sh`
 2. Confirm endpoint:
    - `curl -fsS http://127.0.0.1:9222/json/version`
 3. Retry send command
@@ -40,17 +41,6 @@ Actions:
 1. Discard existing draft in Gmail
 2. Re-open fresh compose
 3. Attach only once and retry
-
-## Attachment blocked after send
-
-Symptoms:
-- recipient receives “Blocked for security reasons”
-
-Actions:
-1. Do not claim successful content delivery
-2. Upload file to Google Drive
-3. Share link with recipient
-4. Optionally send link by Gmail text-only email
 
 ## Send toast not shown but maybe sent
 

@@ -34,13 +34,12 @@ function getArg(name, fallback = '') {
 (async () => {
   const to = getArg('to');
   const file = getArg('file');
-  const body = getArg('body', 'Hi, attached is the requested file.');
+  const body = getArg('body', file ? 'Hi, attached is the requested file.' : 'Hi, this is the requested message.');
 
   if (!to) throw new Error('Missing --to');
-  if (!file) throw new Error('Missing --file');
-  if (!fs.existsSync(file)) throw new Error(`File not found: ${file}`);
+  if (file && !fs.existsSync(file)) throw new Error(`File not found: ${file}`);
 
-  const base = path.basename(file);
+  const base = file ? path.basename(file) : 'gmail-message';
   const stamp = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 12);
   const subject = `${base} ${stamp}`;
 
@@ -127,23 +126,23 @@ function getArg(name, fallback = '') {
 
   await page.keyboard.press('Enter'); // commit recipient chip
 
-  // attach file
-  const fileInputs = await page.$$('input[type="file"]');
-  if (!fileInputs.length) throw new Error('File input not found');
-  let attached = false;
-  for (const fi of fileInputs) {
-    try {
-      await fi.uploadFile(file);
-      attached = true;
-      break;
-    } catch {}
+  if (file) {
+    const fileInputs = await page.$$('input[type="file"]');
+    if (!fileInputs.length) throw new Error('File input not found');
+    let attached = false;
+    for (const fi of fileInputs) {
+      try {
+        await fi.uploadFile(file);
+        attached = true;
+        break;
+      } catch {}
+    }
+    if (!attached) throw new Error('Attachment upload failed');
+    await sleep(3000);
   }
-  if (!attached) throw new Error('Attachment upload failed');
-
-  await sleep(3000);
 
   // strict validation before send
-  const checks = await page.evaluate((to, base) => {
+  const checks = await page.evaluate((to, base, requireAttachment) => {
     const vis = (el) => {
       if (!el) return false;
       const r = el.getBoundingClientRect();
@@ -164,10 +163,10 @@ function getArg(name, fallback = '') {
     const subjectOk = subjectValue.length > 0;
 
     const occur = text.split(base).length - 1;
-    const attachmentOk = occur === 1;
+    const attachmentOk = requireAttachment ? occur === 1 : true;
 
     return { toOk, subjectOk, attachmentOk, attachmentOccur: occur, subjectValue };
-  }, to, base);
+  }, to, base, Boolean(file));
 
   if (!checks.toOk || !checks.subjectOk || !checks.attachmentOk) {
     throw new Error(`Validation failed: ${JSON.stringify(checks)}`);
@@ -206,7 +205,7 @@ function getArg(name, fallback = '') {
   console.log('EMAIL_SENT_OK');
   console.log(`SUBJECT=${subject}`);
   console.log(`TO=${to}`);
-  console.log(`FILE_NAME=${base}`);
+  if (file) console.log(`FILE_NAME=${base}`);
 
   await browser.disconnect();
 })();
